@@ -1,6 +1,5 @@
 from astrbot.api.all import *
-from astrbot.api.event import filter, AstrMessageEvent
-import requests
+from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from .ttp import generate_image
 
 @register("pic-gen", "喵喵", "使用硅基流动api 让llm帮你画图", "0.0.2")
@@ -13,7 +12,7 @@ class MyPlugin(Star):
         self.seed = config.get("seed")
         
     @llm_tool(name="pic-gen")
-    async def pic_gen(self, event: AstrMessageEvent, prompt: str, model: str) -> str:
+    async def pic_gen(self, event: AstrMessageEvent, prompt: str, model: str = "black-forest-labs/FLUX.1-schnell") -> MessageEventResult:
         """
         When a user requires image generation or drawing, and asks you to create an image, 
         or when you need to create a drawing to demonstrate or present something to the user, 
