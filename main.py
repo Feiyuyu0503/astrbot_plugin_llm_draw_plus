@@ -39,8 +39,8 @@ class MyPlugin(Star):
             seed = None
 
         # 调用生成图像的函数
-        image_url, image_path =await generate_image(prompt, api_key, model=model, image_size=image_size, seed=seed)
+        image_url, image_base64 = await generate_image(prompt, api_key, model=model, image_size=image_size, seed=seed)
 
         # 返回生成的图像
-        chain = [Image.fromURL(image_url)]
+        chain = [Image.fromBase64(image_base64)]
         yield event.chain_result(chain)
