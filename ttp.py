@@ -47,10 +47,10 @@ async def generate_image(prompt, api_key, model="stabilityai/stable-diffusion-3-
                                     return image_url, image_base64
                                 else:
                                     logger.error(f"下载图像失败，HTTP状态码: {img_response.status}")
-                                    return None, None
+                                    return image_url, None
                         except asyncio.TimeoutError:
-                            logger.error(f"下载图像超时")
-                            return None, None
+                            logger.error(f"下载图像超时，尝试直接返回URL")
+                            return image_url, None
                     else:
                         logger.error("API响应中未包含图像数据")
                         return None, None

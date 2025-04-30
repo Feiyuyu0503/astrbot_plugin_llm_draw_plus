@@ -44,8 +44,15 @@ class MyPlugin(Star):
 
         # 返回生成的图像
         if image_base64 is None:
-            # 处理图像生成失败的情况
-            chain = [Plain("图像生成失败，请稍后重试或检查API配置。")]
+            if image_url is not None:
+                # 尝试直接download from URL
+                chain = [
+                    Plain(f"已生成图像，提示词：{prompt}\n模型：{model}"),
+                    Image.fromURL(image_url)
+                    ]
+            else:
+                # 处理API响应失败的情况
+                chain = [Plain("图像生成失败，请稍后重试。")]
         else:
             # 同时返回文本和图像
             chain = [
