@@ -2,6 +2,7 @@ import random
 import aiohttp
 import asyncio
 import base64
+from astrbot import logger
 
 async def generate_image(prompt, api_key, model="stabilityai/stable-diffusion-3-5-large", seed=None, image_size="1024x1024", timeout=30):
     url = "https://api.siliconflow.cn/v1/images/generations"
@@ -33,6 +34,8 @@ async def generate_image(prompt, api_key, model="stabilityai/stable-diffusion-3-
                     if 'images' in data and data['images']:
                         image = data['images'][0]  # 获取第一个生成的图像
                         image_url = image['url']
+                        # 添加info级别的日志输出
+                        logger.info(f"成功获取图像URL: {image_url}")
                         try:
                             async with session.get(image_url, timeout=timeout) as img_response:
                                 if img_response.status == 200:
@@ -41,14 +44,19 @@ async def generate_image(prompt, api_key, model="stabilityai/stable-diffusion-3-
                                     image_base64 = base64.b64encode(image_data).decode('utf-8')
                                     return image_url, image_base64
                                 else:
+                                    logger.error(f"下载图像失败，HTTP状态码: {img_response.status}")
                                     return None, None
                         except asyncio.TimeoutError:
+                            logger.error(f"下载图像超时")
                             return None, None
                     else:
+                        logger.error("API响应中未包含图像数据")
                         return None, None
             except asyncio.TimeoutError:
+                logger.error("API请求超时")
                 return None, None
             except Exception as e:
+                logger.error(f"生成图像时发生错误: {str(e)}")
                 return None, None
 
 

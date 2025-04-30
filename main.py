@@ -41,5 +41,13 @@ class MyPlugin(Star):
         image_url, image_base64 = await generate_image(prompt, api_key, model=model, image_size=image_size, seed=seed)
 
         # 返回生成的图像
-        chain = [Image.fromBase64(image_base64)]
+        if image_base64 is None:
+            # 处理图像生成失败的情况
+            chain = [Plain("图像生成失败，请稍后重试或检查API配置。")]
+        else:
+            # 同时返回文本和图像
+            chain = [
+                Plain(f"已生成图像，提示词：{prompt}\n模型：{model}"),
+                Image.fromBase64(image_base64)
+            ]
         yield event.chain_result(chain)
