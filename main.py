@@ -45,7 +45,7 @@ class MyPlugin(Star):
         # 返回生成的图像
         if image_base64 is None:
             if image_url is not None:
-                # 尝试直接发送图像URL
+                # 网络不佳，下载超时时，尝试直接发送图像URL
                 chain = [
                     Plain(f"已生成图像，提示词：{prompt}\n模型：{model}\n图像URL：{image_url}"),
                     ]
