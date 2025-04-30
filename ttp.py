@@ -4,7 +4,7 @@ import asyncio
 import base64
 from astrbot import logger
 
-async def generate_image(prompt, api_key, model="stabilityai/stable-diffusion-3-5-large", seed=None, image_size="1024x1024", timeout=30):
+async def generate_image(prompt, api_key, model="stabilityai/stable-diffusion-3-5-large", seed=None, image_size="1024x1024", timeout=120):
     url = "https://api.siliconflow.cn/v1/images/generations"
 
     if seed is None:
@@ -28,6 +28,7 @@ async def generate_image(prompt, api_key, model="stabilityai/stable-diffusion-3-
                     data = await response.json()
 
                     if data.get("code") == 50505:
+                        logger.error("Model service overloaded. Please try again later.")
                         await asyncio.sleep(1)
                         continue
 
@@ -42,6 +43,7 @@ async def generate_image(prompt, api_key, model="stabilityai/stable-diffusion-3-
                                     image_data = await img_response.read()
                                     # 转换为base64
                                     image_base64 = base64.b64encode(image_data).decode('utf-8')
+                                    logger.info(f"成功获取图像数据，长度: {len(image_base64)}")
                                     return image_url, image_base64
                                 else:
                                     logger.error(f"下载图像失败，HTTP状态码: {img_response.status}")

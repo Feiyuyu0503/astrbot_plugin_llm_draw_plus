@@ -9,6 +9,7 @@ class MyPlugin(Star):
         self.api_key = config.get("api_key")
         # self.model = config.get("model")
         self.image_size = config.get("image_size")
+        self.timeout = config.get("timeout")
         self.seed = config.get("seed")
         
     @llm_tool(name="pic-gen")
@@ -31,6 +32,7 @@ class MyPlugin(Star):
         # 确保从配置中正确加载
         api_key = self.api_key
         image_size = self.image_size
+        timeout = self.timeout
         seed = self.seed
 
         # 如果 seed 为 0，设置为 None
@@ -38,7 +40,7 @@ class MyPlugin(Star):
             seed = None
 
         # 调用生成图像的函数
-        image_url, image_base64 = await generate_image(prompt, api_key, model=model, image_size=image_size, seed=seed)
+        image_url, image_base64 = await generate_image(prompt, api_key, model=model, image_size=image_size, seed=seed, timeout=timeout)
 
         # 返回生成的图像
         if image_base64 is None:

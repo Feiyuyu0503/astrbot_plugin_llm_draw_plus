@@ -13,6 +13,12 @@
         "default": "1024x1024",
         "hint": "图片分辨率，格式为：宽x高，例如：1024x1024"
     },
+    "timeout": {
+        "description": "请求超时时间",
+        "type": "int",
+        "default": 120,
+        "hint": "请求超时时间，单位：秒"
+    },
     "seed": {
         "description": "随机种子，0为随机",
         "type": "int",
